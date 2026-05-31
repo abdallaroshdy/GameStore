@@ -9,7 +9,7 @@ namespace GameStore.Controllers
     public class GamesController : ControllerBase
     {
 
-       private static List<GameDTO> games = new List<GameDTO>
+       private static readonly List<GameDTO> games = new List<GameDTO>
             {
                 new GameDTO(1,  "The Legend of Zelda: Breath of the Wild", "Action-Adventure", 59.99m,  new DateOnly(2017, 3, 3)),
                 new GameDTO(2,  "Elden Ring",                              "Action RPG",        59.99m,  new DateOnly(2022, 2, 25)),
@@ -43,7 +43,7 @@ namespace GameStore.Controllers
         public IActionResult GetbyId(int id)
         {
             var game = games.FirstOrDefault(i => i.Id == id);
-            if (game == null)
+            if (game is null)
                 return NotFound();
 
             return Ok(game);
@@ -70,7 +70,7 @@ namespace GameStore.Controllers
         {
             var game = games.FirstOrDefault(i => i.Id == id);
             
-            if (game == null)
+            if (game is null)
                 return NotFound();
 
             game = new(
@@ -88,8 +88,9 @@ namespace GameStore.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
+            
             var game = games.FirstOrDefault(i => i.Id==id);
-            if (game == null)
+            if (game is null)
                 return NotFound();
 
             games.Remove(game);
