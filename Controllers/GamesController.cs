@@ -8,9 +8,8 @@ namespace GameStore.Controllers
     [Route("[controller]")]
     public class GamesController : ControllerBase
     {
-        private static List<GameDTO> AllData()
-        {
-            List<GameDTO> games = new List<GameDTO>
+
+       private static List<GameDTO> games = new List<GameDTO>
             {
                 new GameDTO(1,  "The Legend of Zelda: Breath of the Wild", "Action-Adventure", 59.99m,  new DateOnly(2017, 3, 3)),
                 new GameDTO(2,  "Elden Ring",                              "Action RPG",        59.99m,  new DateOnly(2022, 2, 25)),
@@ -33,23 +32,69 @@ namespace GameStore.Controllers
                 new GameDTO(19, "League of Legends",                       "MOBA",               0.00m,  new DateOnly(2009, 10, 27)),
                 new GameDTO(20, "Counter-Strike 2",                        "FPS",                0.00m,  new DateOnly(2023, 9, 27)),
             };
-            return games;
-        }
-
+       
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(AllData());
+            return Ok(games);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}" , Name ="GetGame")]
         public IActionResult GetbyId(int id)
         {
-            var game = AllData().FirstOrDefault(i => i.Id == id);
+            var game = games.FirstOrDefault(i => i.Id == id);
             if (game == null)
                 return NotFound();
 
             return Ok(game);
+        }
+
+        [HttpPost]
+        public IActionResult AddNewGame(CreateGameDTO game)
+        {
+            var newGame = new GameDTO(
+                Id:games.Count() +1 , 
+                Name: game.Name,
+                Genre:game.Genre,
+                Price:game.Price,
+                RelaseDate: game.RelaseDate);
+
+            games.Add(newGame);
+
+            return CreatedAtAction(nameof(GetbyId) ,new {id = newGame.Id} , newGame); 
+        }
+
+
+        [HttpPut("{id}")]
+        public IActionResult Update (int id , CreateGameDTO updatedgame)
+        {
+            var game = games.FirstOrDefault(i => i.Id == id);
+            
+            if (game == null)
+                return NotFound();
+
+            game = new(
+                id,
+                updatedgame.Name,
+                updatedgame.Genre,
+                updatedgame.Price,
+                updatedgame.RelaseDate
+            );
+
+            return NoContent();
+
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var game = games.FirstOrDefault(i => i.Id==id);
+            if (game == null)
+                return NotFound();
+
+            games.Remove(game);
+
+            return NoContent();
         }
     }
 }
