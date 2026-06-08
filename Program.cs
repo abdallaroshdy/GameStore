@@ -20,6 +20,7 @@ namespace GameStore
             builder.Services.AddDbContext<GamesDBContext>(option =>
             {
                 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                
             });
 
             var app = builder.Build();
