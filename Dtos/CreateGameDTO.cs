@@ -4,7 +4,7 @@ namespace GameStore.Dtos
 {
     public record CreateGameDTO(
         [Required][StringLength(50)] string Name,
-        [Required][StringLength(20)] string Genre,
+        [Required][Range(1,50)] int GenreId,
         [Required][Range(1,1000)] decimal Price,
         DateOnly RelaseDate
             
